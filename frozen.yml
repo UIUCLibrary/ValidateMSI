@@ -1,0 +1,5 @@
+# This is for testing code that was frozen and packaged into an MSI by CX_Freeze
+title: frozen
+required:
+  - VCRUNTIME140.dll
+  - python36.dll
