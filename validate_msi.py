@@ -1,13 +1,14 @@
+#!/usr/bin/env python
+
 import contextlib
 
 import collections.abc
 import msilib
 import argparse
 import os
+import yaml
 
 import sys
-
-MSI_FILE = "C:/Users/hborcher/PycharmProjects/helloFreeze/dist/helloFreeze-0.0.2-amd64.msi"
 
 
 class Query(contextlib.AbstractContextManager, collections.abc.Collection):
@@ -78,13 +79,22 @@ def get_requirements(file_name):
     pass
 
 
+def get_requirements_YAML(requirement_file):
+    with open(requirement_file) as f:
+        requirements_data = yaml.load(f)
+        for requirement in requirements_data["required"]:
+            yield requirement
+    pass
+
+
 def main():
     parser = get_parser()
     args = parser.parse_args()
     print("Checking {} for files listed in {}".format(args.msi, args.requirement_file))
     print()
 
-    requirements = get_requirements(args.requirement_file)
+    # requirements = get_requirements(args.requirement_file)
+    requirements = get_requirements_YAML(args.requirement_file)
     missing_files = []
 
 
