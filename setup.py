@@ -1,9 +1,8 @@
 from setuptools import setup
-import validate_msi
 
 setup(
     name='CheckRequiredFiles',
-    version=validate_msi.__version__,
+    version='0.0.1',
     url='https://github.com/UIUCLibrary/ValidateMSI',
     license='',
     scripts=['validate_msi.py'],
