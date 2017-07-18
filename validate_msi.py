@@ -91,6 +91,8 @@ def get_requirements_YAML(requirement_file):
 def main():
     parser = get_parser()
     args = parser.parse_args()
+    if args.i:
+        print("Case insensitive")
     print("Checking {} for files listed in {}".format(args.msi, args.requirement_file))
     print()
 
