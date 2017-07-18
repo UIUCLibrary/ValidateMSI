@@ -67,6 +67,7 @@ def get_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("msi", help="path to the MSI file")
     parser.add_argument("requirement_file", help="path to a file contains a lists the required file names")
+    parser.add_argument("-i", action="store_true", help="Case Insensitive")
     return parser
 
 
@@ -95,16 +96,8 @@ def main():
 
     # requirements = get_requirements(args.requirement_file)
     requirements = get_requirements_YAML(args.requirement_file)
-    missing_files = []
 
-
-    with Query(args.msi) as files_in_msi:
-        for required_file in requirements:
-            if required_file in files_in_msi:
-                print("{:<20} Found".format(required_file))
-            else:
-                print("{:<20} Missing".format(required_file))
-                missing_files.append(required_file)
+    missing_files = find_missing(args.msi, requirements, case_insensitive=args.i)
 
     print()
     if missing_files:
@@ -115,6 +108,28 @@ def main():
     else:
         print("Validation: PASSED!")
 
+
+def find_missing(msi, requirements, case_insensitive=False):
+    missing_files = []
+
+    if case_insensitive:
+        required_files =[x.lower() for x in requirements]
+    else:
+        required_files = requirements
+
+    with Query(msi) as files_in_msi:
+        if case_insensitive:
+            found_files = [f[0].lower() for f in files_in_msi]
+        else:
+            found_files = [f[0] for f in files_in_msi]
+        for required_file in required_files:
+            match_searcher = required_file
+            if match_searcher in found_files:
+                print("{:<20} Found".format(required_file))
+            else:
+                print("{:<20} Missing".format(required_file))
+                missing_files.append(required_file)
+    return missing_files
 
 if __name__ == '__main__':
     # main()
